@@ -250,7 +250,6 @@ class Application extends \Pimple\Container
                     if (!$depth) {
                         $tokens[] = substr($url, 0, $pointer);
 
-                        $url = substr($url, $pointer);
                         break;
                     }
                 }
@@ -259,9 +258,11 @@ class Application extends \Pimple\Container
                     throw new \Exception('Tokenizer: couldn\'t find the end of '
                         . 'variable. Are you missing a "}"?');
                 }
+
+                $url = substr($url, $pointer);
             } else {
                 throw new \Exception('Tokenizer: no idea what this is "'
-                    . $url[0] . '"');
+                    . $url[0] . '" in url "' . $originalUrl . '"');
             }
         }
 
