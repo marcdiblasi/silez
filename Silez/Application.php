@@ -168,7 +168,7 @@ class Application extends \Pimple\Container
                     // Match!
                     if (count($routeTokens) === $i) {
                         foreach ($this->before as $before) {
-                            $request = call_user_func($before, $request);
+                            $request = $before($request) ?? $request;
                         }
 
                         $response = call_user_func_array($route['to'], $vars);
@@ -179,7 +179,7 @@ class Application extends \Pimple\Container
                         }
 
                         foreach ($this->after as $after) {
-                            $response = call_user_func($after, $request, $response);
+                            $response = $after($request, $response) ?? $response;
                         }
                     }
                 }
