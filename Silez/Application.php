@@ -218,6 +218,12 @@ class Application extends \Pimple\Container
     protected function tokenize(string $url) : array
     {
         $tokens = [];
+        $originalUrl = $url;
+
+        // Get rid of # and everything after
+        if (false !== ($pos = strpos($url, '#'))) {
+            $url = substr($url, 0, $pos);
+        }
 
         while (strlen($url)) {
             if (in_array($url[0], $this::SEPARATORS)) {
