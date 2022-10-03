@@ -194,7 +194,7 @@ class Application extends \Pimple\Container
             }
 
             foreach ($this->error as $error) {
-                $returnValue = call_user_func($error, $e, $e->code);
+                $returnValue = call_user_func($error, $e, $e->getCode());
 
                 if ($returnValue instanceof Response) {
                     $response = $returnValue;
