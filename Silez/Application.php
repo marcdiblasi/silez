@@ -171,7 +171,12 @@ class Application extends \Pimple\Container
                             $request = $before($request) ?? $request;
                         }
 
-                        $response = call_user_func_array($route['to'], $vars);
+                        try {
+                            $response = call_user_func_array($route['to'], $vars);
+                        } catch (\ArgumentCountError $e) {
+                            $vars['request'] = $request;
+                            $response = call_user_func_array($route['to'], $vars);
+                        }
 
                         if (is_string($response)) {
                             $newResponse = new Response($response);
