@@ -230,6 +230,11 @@ class Application extends \Pimple\Container
             $url = substr($url, 0, $pos);
         }
 
+        // Let's not consider query strings
+        if (false !== ($pos = strpos($url, '?'))) {
+            $url = substr($url, 0, $pos);
+        }
+
         while (strlen($url)) {
             if (in_array($url[0], $this::SEPARATORS)) {
                 $tokens[] = $url[0];
