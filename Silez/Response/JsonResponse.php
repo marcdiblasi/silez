@@ -20,5 +20,7 @@ class JsonResponse extends Response
         $this->status  = $status;
         $this->data    = json_encode($data);
         $this->headers = $headers;
+
+        $this->headers['Content-Type'] = 'application/json';
     }
 }
