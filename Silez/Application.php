@@ -196,6 +196,8 @@ class Application extends \Pimple\Container
         } catch (\Exception $e) {
             if ($e instanceof Response) {
                 $response = $e;
+            } else {
+                $response = new Response('Error: ' . $e->getMessage(), 500);
             }
 
             foreach ($this->error as $error) {
