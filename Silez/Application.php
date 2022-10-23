@@ -242,10 +242,14 @@ class Application extends \Pimple\Container
                 $tokens[] = $url[0];
 
                 $url = substr($url, 1);
-            } elseif (preg_match('#^[a-zA-Z0-9\._+-]+#', $url, $matches)) {
+            } elseif (preg_match('#^[a-zA-Z0-9%\._+-]+#', $url, $matches)) {
+                $length = strlen($matches[0]);
+                if (false !== strpos($matches[0], '%')) {
+                    $matches[0] = urldecode($matches[0]);
+                }
                 $tokens[] = $matches[0];
 
-                $url = substr($url, strlen($matches[0]));
+                $url = substr($url, $length);
             } elseif ('{' === $url[0]) {
                 $depth = 1;
                 $pointer = 1;
