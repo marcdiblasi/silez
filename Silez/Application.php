@@ -197,7 +197,48 @@ class Application extends \Pimple\Container
             if ($e instanceof Response) {
                 $response = $e;
             } else {
-                $response = new Response('Error: ' . $e->getMessage(), 500);
+                $text = 'Error: ' . $e->getMessage();
+                $text .= "<br />\n";
+                $text .= "<br />\n";
+
+                $text .= "Stack Trace: <br />\n";
+
+                foreach ($e->getTrace() as $line) {
+                    if (!isset($line['file']) || !isset($line['line'])) {
+                        continue;
+                    }
+
+                    $text .= $line['file'] . ':' . $line['line'];
+
+                    if (isset($line['class'])) {
+                        $text .= ' ' . $line['class'];
+                    }
+
+                    if (isset($line['function'])) {
+                        $text .= ' ' . $line['function'];
+                    }
+
+                    if (isset($line['args'])) {
+                        $args = [];
+                        foreach ($line['args'] as $arg) {
+                            if (is_array($arg)) {
+                                $args[] = 'array';
+                            } elseif ($arg instanceof \Closure) {
+                                $args[] = 'closure';
+                            } elseif (is_object($arg)) {
+                                $args[] = 'object';
+                            } else {
+                                $args[] = $arg;
+                            }
+                        }
+
+                        $text .= '(' . implode(', ', $args) . ')';
+                    }
+
+                    $text .= "<br />\n";
+                }
+
+                $response = new Response($text, 500);
             }
 
             foreach ($this->error as $error) {
