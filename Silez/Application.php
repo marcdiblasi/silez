@@ -311,7 +311,7 @@ class Application extends \Pimple\Container
                     }
                 }
 
-                if ($pointer === strlen($url)) {
+                if ($pointer === strlen($url) && $depth > 0) {
                     throw new \Exception('Tokenizer: couldn\'t find the end of '
                         . 'variable. Are you missing a "}"?');
                 }
