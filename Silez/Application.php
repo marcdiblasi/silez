@@ -186,6 +186,8 @@ class Application extends \Pimple\Container
                         foreach ($this->after as $after) {
                             $response = $after($request, $response) ?? $response;
                         }
+
+                        break;
                     }
                 }
             }
