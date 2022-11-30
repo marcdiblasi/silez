@@ -13,6 +13,6 @@
     },
     "type": "library",
     "autoload": {
-        "psr-4": {"Silez\\": "Silez/"}
+        "psr-4": {"Silez\\": "src/Silez/"}
     }
 }
