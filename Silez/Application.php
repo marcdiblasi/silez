@@ -139,13 +139,18 @@ class Application extends \Pimple\Container
         return new JsonResponse($data, $status, $headers);
     }
 
-    public function run()
+    public function run() : void
+    {
+        $request = Request::createFromGlobals();
+        $this->handle($request);
+    }
+
+    public function handle(Request $request) : void
     {
         $matches = [];
         try {
-            $urlTokens = $this->tokenize($_SERVER['REQUEST_URI']);
-            $method    = strtolower($_SERVER['REQUEST_METHOD']);
-            $request   = Request::createFromGlobals();
+            $urlTokens = $this->tokenize($request->server->get('REQUEST_URI'));
+            $method    = strtolower($request->server->get('REQUEST_METHOD'));
             $response  = null;
 
             foreach ($this->routes as $route) {
@@ -258,7 +263,7 @@ class Application extends \Pimple\Container
             header($name . ': ' . $value);
         }
 
-        if ('head' !== strtolower($_SERVER['REQUEST_METHOD'])) {
+        if ('head' !== $method) {
             echo $response->data;
         }
 
