@@ -142,10 +142,22 @@ class Application extends \Pimple\Container
     public function run() : void
     {
         $request = Request::createFromGlobals();
-        $this->handle($request);
+        $response = $this->handle($request);
+
+        http_response_code($response->status);
+
+        foreach ($response->headers as $name => $value) {
+            header($name . ': ' . $value);
+        }
+
+        if ('head' !== strtolower($request->server->get('REQUEST_METHOD'))) {
+            echo $response->data;
+        }
+
+        exit;
     }
 
-    public function handle(Request $request) : void
+    public function handle(Request $request) : Response
     {
         $matches = [];
         try {
@@ -257,20 +269,10 @@ class Application extends \Pimple\Container
             }
         }
 
-        http_response_code($response->status);
-
-        foreach ($response->headers as $name => $value) {
-            header($name . ': ' . $value);
-        }
-
-        if ('head' !== $method) {
-            echo $response->data;
-        }
-
-        exit;
+        return $response;
     }
 
-    protected function tokenize(string $url) : array
+    public function tokenize(string $url) : array
     {
         $tokens = [];
         $originalUrl = $url;
