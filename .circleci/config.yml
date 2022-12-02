@@ -35,10 +35,24 @@ jobs:
           command: |
             ./vendor/bin/phpunit tests
 
+  lint:
+    docker:
+      - image: php:8.1-cli
+    resource_class: small
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /root/project
+      - run:
+          name: "Run lint"
+          command: |
+            find src -name '*.php' -type f -exec php -l {} \;
+
 workflows:
   test:
     jobs:
       - composer-install
+      - lint
       - phpunit:
           requires:
             - composer-install
