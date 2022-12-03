@@ -1,6 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
-/*
+/**
  * This file is part of the Silez framework.
  *
  * Author: Marc DiBlasi <marc.diblasi@gmail.com>
@@ -9,15 +9,25 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Silez;
 
-use \Pimple\ServiceProviderInterface;
-
+use Pimple\ServiceProviderInterface;
 use Silez\Response\RedirectResponse;
 use Silez\Response\JsonResponse;
-
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * The Application is the main part of Silez. It handles most of the interface,
+ * parsing routes, and actually running the router.
+ *
+ * @category Routing
+ * @package  Silez
+ * @author   Marc DiBlasi <marc.diblasi@gmail.com>
+ * @license  MIT https://github.com/marcdiblasi/silez/blob/main/LICENSE
+ * @link     https://github.com/marcdiblasi/silez
+ */
 class Application extends \Pimple\Container
 {
     public array $routes = [];
@@ -26,7 +36,7 @@ class Application extends \Pimple\Container
     public array $after = [];
     public array $error = [];
 
-    const SEPARATORS = ['/'];
+    public const SEPARATORS = ['/'];
 
     public function __construct(array $values = [])
     {
@@ -46,8 +56,10 @@ class Application extends \Pimple\Container
         }
     }
 
-    public function register(ServiceProviderInterface $provider, array $values = []) : Application
-    {
+    public function register(
+        ServiceProviderInterface $provider,
+        array $values = []
+    ): Application {
         $this->providers[] = $provider;
 
         $provider->register($this);
@@ -59,22 +71,22 @@ class Application extends \Pimple\Container
         return $this;
     }
 
-    public function before(callable $callback) : void
+    public function before(callable $callback): void
     {
         $this->before[] = $callback;
     }
 
-    public function after(callable $callback) : void
+    public function after(callable $callback): void
     {
         $this->after[] = $callback;
     }
 
-    public function error(callable $callback) : void
+    public function error(callable $callback): void
     {
         $this->error[] = $callback;
     }
 
-    protected function addRoute(string $method, string $pattern, callable $to)
+    protected function addRoute(string $method, string $pattern, callable $to): void
     {
         $this->routes[] = [
             'method'  => strtolower($method),
@@ -88,58 +100,64 @@ class Application extends \Pimple\Container
         ];
     }
 
-    public function match(string $pattern, callable $to) : void
+    public function match(string $pattern, callable $to): void
     {
         $this->addRoute('match', $pattern, $to);
     }
 
-    public function get(string $pattern, callable $to) : void
+    public function get(string $pattern, callable $to): void
     {
         $this->addRoute('get', $pattern, $to);
         $this->addRoute('head', $pattern, $to);
     }
 
-    public function post(string $pattern, callable $to) : void
+    public function post(string $pattern, callable $to): void
     {
         $this->addRoute('post', $pattern, $to);
     }
 
-    public function put(string $pattern, callable $to) : void
+    public function put(string $pattern, callable $to): void
     {
         $this->addRoute('put', $pattern, $to);
     }
 
-    public function delete(string $pattern, callable $to) : void
+    public function delete(string $pattern, callable $to): void
     {
         $this->addRoute('delete', $pattern, $to);
     }
 
-    public function options(string $pattern, callable $to) : void
+    public function options(string $pattern, callable $to): void
     {
         $this->addRoute('options', $pattern, $to);
     }
 
-    public function patch(string $pattern, callable $to) : void
+    public function patch(string $pattern, callable $to): void
     {
         $this->addRoute('patch', $pattern, $to);
     }
 
-    public function abort(int $statusCode, string $message, array $headers = [])
-    {
+    public function abort(
+        int $statusCode,
+        string $message,
+        array $headers = []
+    ): Response {
         throw new Response($message, $statusCode, $headers);
     }
 
-    public function redirect(string $url, int $status = 302)
+    public function redirect(string $url, int $status = 302): RedirectResponse
     {
         return new RedirectResponse($url, $status);
     }
 
-    public function json(array $data = [], int $status = 200, array $headers = [])
-    {
+    public function json(
+        array $data = [],
+        int $status = 200,
+        array $headers = []
+    ): JsonResponse {
         return new JsonResponse($data, $status, $headers);
     }
 
-    public function run() : void
+    public function run(): void
     {
         $request = Request::createFromGlobals();
         $response = $this->handle($request);
@@ -157,7 +175,7 @@ class Application extends \Pimple\Container
         exit;
     }
 
-    public function handle(Request $request) : Response
+    public function handle(Request $request): Response
     {
         $matches = [];
         try {
@@ -272,7 +290,7 @@ class Application extends \Pimple\Container
         return $response;
     }
 
-    public function tokenize(string $url) : array
+    public function tokenize(string $url): array
     {
         $tokens = [];
         $originalUrl = $url;
@@ -321,14 +339,18 @@ class Application extends \Pimple\Container
                 }
 
                 if ($pointer === strlen($url) && $depth > 0) {
-                    throw new \Exception('Tokenizer: couldn\'t find the end of '
-                        . 'variable. Are you missing a "}"?');
+                    throw new \Exception(
+                        'Tokenizer: couldn\'t find the end of variable. Are '
+                        . 'you missing a "}"?'
+                    );
                 }
 
                 $url = substr($url, $pointer);
             } else {
-                throw new \Exception('Tokenizer: no idea what this is "'
-                    . $url[0] . '" in url "' . $originalUrl . '"');
+                throw new \Exception(
+                    'Tokenizer: no idea what this is "' . $url[0]
+                    . '" in url "' . $originalUrl . '"'
+                );
             }
         }
 

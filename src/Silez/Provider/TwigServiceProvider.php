@@ -1,6 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
-/*
+/**
  * This file is part of the Silez framework.
  *
  * Author: Marc DiBlasi <marc.diblasi@gmail.com>
@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Silez\Provider;
 
-use \Pimple\Container;
-use \Pimple\ServiceProviderInterface;
-
-use \Twig\Environment;
-use \Twig\Loader\ChainLoader;
-use \Twig\Loader\ArrayLoader;
-use \Twig\Loader\FilesystemLoader;
-use \Twig\Extension\DebugExtension;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use Twig\Environment;
+use Twig\Loader\ChainLoader;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\FilesystemLoader;
+use Twig\Extension\DebugExtension;
 
 class TwigServiceProvider implements ServiceProviderInterface
 {
@@ -35,7 +36,8 @@ class TwigServiceProvider implements ServiceProviderInterface
                     'charset'          => $app['charset'],
                     'debug'            => $app['debug'],
                     'strict_variables' => $app['debug'],
-                ], $app['twig.options']
+                ],
+                $app['twig.options']
             );
 
             $twig = new Environment($app['twig.loader'], $app['twig.options']);
