@@ -41,18 +41,28 @@ jobs:
     resource_class: small
     steps:
       - checkout
-      - attach_workspace:
-          at: /root/project
       - run:
           name: "Run lint"
           command: |
             find src -name '*.php' -type f -exec php -l {} \;
+
+  code-sniffer:
+    docker:
+      - image: cytopia/phpcs:latest
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: "Run php codesniffer"
+          command: |
+            phpcs --standard=PSR12 src/
 
 workflows:
   test:
     jobs:
       - composer-install
       - lint
+      - code-sniffer
       - phpunit:
           requires:
             - composer-install
