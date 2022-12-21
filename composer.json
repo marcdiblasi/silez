@@ -1,7 +1,7 @@
 {
     "name": "marcdiblasi/silez",
     "description": "An HTTP router designed as a drop-in replacement for Silex",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "homepage": "http://github.com/marcdiblasi/silez",
     "license": "MIT",
     "keywords": ["router", "routing"],
