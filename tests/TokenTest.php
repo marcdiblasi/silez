@@ -1,6 +1,20 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * This file is part of the Silez framework.
+ *
+ * Author: Marc DiBlasi <marc.diblasi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Silez\Tests;
+
 use PHPUnit\Framework\TestCase;
-use \Silez\Application;
+use Silez\Application;
 
 final class TokenTest extends TestCase
 {
@@ -15,7 +29,7 @@ final class TokenTest extends TestCase
             'bar'
         ], $tokens);
     }
-    
+
     public function testTokenizeHandlesUrlWithQueryString(): void
     {
         $app = new Application();
@@ -26,7 +40,7 @@ final class TokenTest extends TestCase
             '/'
         ], $tokens);
     }
-    
+
     public function testTokenizeHandlesUrlWithVariable(): void
     {
         $app = new Application();
@@ -36,7 +50,7 @@ final class TokenTest extends TestCase
             '{bar}',
         ], $tokens);
     }
-    
+
     public function testTokenizeHandlesUrlWithMultipleConsecutiveSlashes(): void
     {
         $app = new Application();

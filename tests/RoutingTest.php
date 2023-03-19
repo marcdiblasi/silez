@@ -1,6 +1,20 @@
-<?php declare(strict_types=1);
+<?php
+
+/**
+ * This file is part of the Silez framework.
+ *
+ * Author: Marc DiBlasi <marc.diblasi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Silez\Tests;
+
 use PHPUnit\Framework\TestCase;
-use \Silez\Application;
+use Silez\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 final class RoutingTest extends TestCase
@@ -8,7 +22,7 @@ final class RoutingTest extends TestCase
     public function testGetRequest(): void
     {
         $app = new Application();
-        $app->get('/foo', function() {
+        $app->get('/foo', function () {
             return 'bar';
         });
 
@@ -46,13 +60,13 @@ final class RoutingTest extends TestCase
         ));
 
         $this->assertEquals('404 Page not found.', $response->data);
-        $this->assertEquals(404, $response->status);        
+        $this->assertEquals(404, $response->status);
     }
 
     public function testError(): void
     {
         $app = new Application();
-        $app->get('/foo', function(){
+        $app->get('/foo', function () {
             throw new \Exception('error');
         });
 
@@ -69,13 +83,13 @@ final class RoutingTest extends TestCase
         ));
 
         $this->assertStringStartsWith('Error: error', $response->data);
-        $this->assertEquals(500, $response->status);        
+        $this->assertEquals(500, $response->status);
     }
 
     public function testPostRequest(): void
     {
         $app = new Application();
-        $app->post('/foo', function(Request $request) {
+        $app->post('/foo', function (Request $request) {
             return $request->get('foo');
         });
 
