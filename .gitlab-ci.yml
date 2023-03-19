@@ -17,7 +17,6 @@ composer-install:
     - php composer-setup.php
     - php -r "unlink('composer-setup.php');"
 
-    - php composer.phar config gitlab-token.gitlab.com $GITLAB_TOKEN
     - php composer.phar install
   artifacts:
     paths:
